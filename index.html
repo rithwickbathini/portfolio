@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rithwick Bathini — Software Engineer & AI Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07070f;--glass:rgba(255,255,255,0.05);--gb:rgba(255,255,255,0.10);
+  --gh:rgba(255,255,255,0.09);--v:#7c3aed;--c:#22d3ee;--r:#f472b6;
+  --text:#f1f5f9;--muted:#94a3b8;
+  --display:'Playfair Display',serif;--body:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cur{position:fixed;top:0;left:0;z-index:9999;width:10px;height:10px;background:var(--c);border-radius:50%;pointer-events:none;mix-blend-mode:screen;transform:translate(-50%,-50%)}
+#cur-r{position:fixed;top:0;left:0;z-index:9998;width:40px;height:40px;border:1.5px solid rgba(124,58,237,.55);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s}
+
+/* SCROLL PROGRESS */
+#sprog{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;align-items:center;gap:4px}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .3s,transform .3s;cursor:pointer}
+.sp-dot.active{background:var(--c);transform:scale(1.4)}
+
+/* ORBS */
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.32;pointer-events:none;z-index:0;animation:floatOrb 20s ease-in-out infinite}
+.o1{width:620px;height:620px;background:radial-gradient(circle,var(--v),transparent 70%);top:-120px;left:-180px;animation-delay:0s}
+.o2{width:500px;height:500px;background:radial-gradient(circle,var(--c),transparent 70%);top:38%;right:-120px;animation-delay:-7s}
+.o3{width:420px;height:420px;background:radial-gradient(circle,var(--r),transparent 70%);bottom:8%;left:18%;animation-delay:-13s}
+@keyframes floatOrb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(28px,-38px) scale(1.05)}66%{transform:translate(-18px,28px) scale(.95)}}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;padding:1rem 3rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:background .4s,border-color .4s,backdrop-filter .4s;animation:slideDown .8s ease both}
+nav.scrolled{background:rgba(7,7,15,.82);backdrop-filter:blur(22px);border-color:var(--gb)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.nav-logo{font-family:var(--display);font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,#fff,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;position:relative;transition:color .3s;padding-bottom:4px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--c);border-radius:2px;transition:width .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a.active::after{width:100%}
+
+/* GLASS CARD */
+.gc{background:var(--glass);border:1px solid var(--gb);border-radius:18px;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);transition:transform .4s,box-shadow .4s,border-color .4s}
+.gc:hover{transform:translateY(-7px);box-shadow:0 22px 60px rgba(124,58,237,.22);border-color:rgba(124,58,237,.38)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:7rem 2rem 4rem;position:relative;z-index:1}
+canvas#particles{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-inner{position:relative;z-index:2}
+.h-tag{font-family:var(--mono);font-size:.78rem;color:var(--c);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.4rem;opacity:0;animation:fadeUp .8s .2s ease both}
+.h-name{font-family:var(--display);font-size:clamp(3.2rem,9vw,7.5rem);font-weight:900;line-height:.95;letter-spacing:-.04em;background:linear-gradient(135deg,#fff 20%,#a78bfa 55%,var(--c) 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.2rem;opacity:0;animation:fadeUp .8s .4s ease both}
+.h-title{font-size:clamp(1rem,2.2vw,1.35rem);color:var(--muted);margin-bottom:.5rem;min-height:2rem;opacity:0;animation:fadeUp .8s .6s ease both}
+.h-title .tw{color:var(--c);font-weight:600}
+.h-title .cursor{display:inline-block;width:2px;height:1.1em;background:var(--c);margin-left:2px;animation:blink .75s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.h-sub{max-width:560px;color:var(--muted);line-height:1.8;font-size:.98rem;margin:1rem auto 2.5rem;opacity:0;animation:fadeUp .8s .8s ease both}
+.h-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s 1s ease both}
+.btn-p{padding:.9rem 2.2rem;border-radius:100px;background:linear-gradient(135deg,var(--v),var(--c));color:#fff;font-weight:600;font-size:.9rem;text-decoration:none;border:none;cursor:none;transition:transform .3s,box-shadow .3s;box-shadow:0 0 28px rgba(124,58,237,.4)}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 0 52px rgba(124,58,237,.65)}
+.btn-s{padding:.9rem 2.2rem;border-radius:100px;background:var(--glass);border:1px solid var(--gb);color:var(--text);font-weight:600;font-size:.9rem;text-decoration:none;cursor:none;backdrop-filter:blur(10px);transition:transform .3s,background .3s}
+.btn-s:hover{transform:translateY(-3px);background:var(--gh)}
+.scroll-hint{margin-top:3.5rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp .8s 1.3s ease both}
+.scroll-hint span{font-size:.68rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.sline{width:1px;height:56px;background:linear-gradient(to bottom,var(--c),transparent);animation:spulse 2s ease-in-out infinite}
+@keyframes spulse{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.5);opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTIONS */
+section{position:relative;z-index:1}
+.sw{max-width:1100px;margin:0 auto;padding:6rem 2rem}
+.slabel{font-family:var(--mono);font-size:.75rem;color:var(--c);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.7rem}
+.sh{font-family:var(--display);font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:1rem}
+.ssub{color:var(--muted);line-height:1.8;max-width:540px;margin-bottom:3rem;font-size:.96rem}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(38px);transition:opacity .7s ease,transform .7s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* ABOUT */
+#about{background:rgba(124,58,237,.04)}
+.about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:3.5rem;align-items:start}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+.stat-c{padding:1.4rem;text-align:center}
+.stat-n{font-family:var(--display);font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-l{font-size:.72rem;color:var(--muted);margin-top:.3rem;font-family:var(--mono);letter-spacing:.05em}
+.avatar{width:100%;aspect-ratio:1;max-width:240px;margin:0 auto;border-radius:24px;background:linear-gradient(135deg,var(--v),var(--c),var(--r));display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 60px rgba(124,58,237,.3)}
+.avatar::after{content:'';position:absolute;inset:4px;border-radius:20px;background:var(--bg);display:block}
+.avatar span{position:relative;z-index:1;font-size:5rem}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem}
+.sk-card{padding:1.75rem}
+.sk-title{font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.7rem;font-size:.95rem}
+.sk-icon{font-size:1.3rem}
+.tags{display:flex;flex-wrap:wrap;gap:.45rem}
+.tag{padding:.32rem .85rem;border-radius:100px;font-size:.75rem;font-family:var(--mono);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);transition:all .3s;cursor:default}
+.tag:hover{background:rgba(124,58,237,.2);border-color:var(--v);color:#fff;transform:translateY(-2px)}
+
+/* PROJECTS */
+#projects{background:rgba(124,58,237,.03)}
+.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.75rem}
+.proj-card{position:relative;overflow:hidden;display:flex;flex-direction:column}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--v),var(--c));transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.proj-card:hover::before{transform:scaleX(1)}
+.proj-svg{width:100%;height:130px;display:flex;align-items:center;justify-content:center;border-radius:12px;margin-bottom:1.25rem;overflow:hidden;background:rgba(255,255,255,.03);transition:transform .4s}
+.proj-card:hover .proj-svg svg{transform:scale(1.04)}
+.proj-num{font-family:var(--mono);font-size:.7rem;color:var(--c);letter-spacing:.1em;margin-bottom:.75rem}
+.proj-name{font-family:var(--display);font-size:1.25rem;font-weight:700;margin-bottom:.7rem}
+.proj-desc{color:var(--muted);font-size:.88rem;line-height:1.75;margin-bottom:1.2rem;flex:1}
+.proj-impact{font-size:.82rem;font-weight:600;color:var(--c);margin-bottom:1.2rem;padding:.5rem .85rem;background:rgba(34,211,238,.08);border-left:2px solid var(--c);border-radius:0 6px 6px 0}
+.proj-tech{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.4rem}
+.tech{padding:.2rem .7rem;border-radius:100px;font-size:.68rem;font-family:var(--mono);background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);color:var(--c)}
+.proj-links{display:flex;gap:1.2rem}
+.plink{font-size:.82rem;font-weight:600;color:var(--muted);text-decoration:none;transition:color .3s;display:flex;align-items:center;gap:.35rem}
+.plink:hover{color:var(--c)}
+
+/* EXPERIENCE */
+.timeline{position:relative;padding-left:2.2rem}
+.timeline::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:linear-gradient(to bottom,var(--v),var(--c),rgba(34,211,238,0))}
+.titem{position:relative;margin-bottom:2.2rem}
+.tdot{position:absolute;left:-2.55rem;top:8px;width:11px;height:11px;border-radius:50%;box-shadow:0 0 14px currentColor}
+.tcard{padding:1.5rem 1.75rem}
+.tperiod{font-family:var(--mono);font-size:.72rem;color:var(--c);letter-spacing:.1em;margin-bottom:.45rem}
+.trole{font-family:var(--display);font-size:1.1rem;font-weight:700;margin-bottom:.2rem}
+.tco{color:var(--r);font-weight:500;font-size:.88rem;margin-bottom:.7rem}
+.tdesc{color:var(--muted);font-size:.86rem;line-height:1.75}
+
+/* CERTIFICATIONS */
+#certs{background:rgba(6,182,212,.03)}
+.cert-track-wrap{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.cert-track{display:flex;gap:1rem;animation:marquee 28s linear infinite;width:max-content}
+.cert-track:hover{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.cert-badge{padding:.6rem 1.4rem;border-radius:100px;white-space:nowrap;font-size:.78rem;font-family:var(--mono);font-weight:500;background:var(--glass);border:1px solid var(--gb);color:var(--text);position:relative;overflow:hidden;cursor:default;flex-shrink:0}
+.cert-badge::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.12) 50%,transparent 100%);transform:translateX(-100%);transition:transform .5s}
+.cert-badge:hover::after{transform:translateX(100%)}
+.cert-org{color:var(--c);font-size:.65rem;display:block;margin-bottom:.1rem}
+
+/* TESTIMONIALS */
+#testimonials{background:rgba(244,114,182,.03)}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.test-card{padding:2rem}
+.qmark{font-size:3.2rem;line-height:1;color:var(--v);font-family:serif;opacity:.55;margin-bottom:-.4rem}
+.ttext{color:var(--muted);font-size:.9rem;line-height:1.85;margin-bottom:1.5rem;font-style:italic}
+.tauthor{display:flex;align-items:center;gap:.75rem}
+.tav{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0}
+.tname{font-weight:600;font-size:.88rem}
+.trole2{font-size:.73rem;color:var(--muted)}
+
+/* CONTACT */
+#contact{background:rgba(124,58,237,.03)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:4rem;align-items:start}
+.cinfo-list{list-style:none;display:flex;flex-direction:column;gap:1.2rem;margin-top:1.5rem}
+.cinfo-list li{display:flex;align-items:center;gap:1rem;color:var(--muted);font-size:.9rem}
+.cinfo-list a{color:var(--text);text-decoration:none;transition:color .3s}
+.cinfo-list a:hover{color:var(--c)}
+.ci{font-size:1.15rem}
+.cform{display:flex;flex-direction:column;gap:1.2rem;padding:2rem}
+.fg{display:flex;flex-direction:column;gap:.45rem}
+.fg label{font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fg input,.fg textarea{padding:.88rem 1.1rem;background:var(--glass);border:1px solid var(--gb);border-radius:12px;color:var(--text);font-family:var(--body);font-size:.9rem;outline:none;transition:border-color .3s,box-shadow .3s;resize:vertical;backdrop-filter:blur(10px)}
+.fg input:focus,.fg textarea:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.fg textarea{min-height:120px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.submit{padding:1rem 2.2rem;border-radius:100px;background:linear-gradient(135deg,var(--v),var(--c));color:#fff;font-weight:700;font-size:.9rem;border:none;cursor:none;transition:transform .3s,box-shadow .3s;box-shadow:0 0 28px rgba(124,58,237,.3);align-self:flex-start}
+.submit:hover{transform:translateY(-3px);box-shadow:0 0 52px rgba(124,58,237,.55)}
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,var(--v),var(--c));color:#fff;padding:.9rem 2rem;border-radius:100px;font-weight:600;font-size:.88rem;z-index:1000;transition:transform .4s ease;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* FOOTER */
+footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--gb);color:var(--muted);font-size:.8rem}
+footer a{color:var(--c);text-decoration:none}
+footer strong{color:var(--text)}
+
+/* SECTION DIVIDER */
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.3),rgba(34,211,238,.3),transparent);margin:0}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:1rem 1.25rem}.nav-links{display:none}
+  .about-grid,.contact-grid,.test-grid,.proj-grid{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+  .sw{padding:4rem 1.25rem}
+  body{cursor:auto}#cur,#cur-r,#sprog{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .orb,.sline,.cert-track{animation:none}
+  .rv{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div id="toast">✓ Message sent! I'll get back to you soon.</div>
+
+<!-- Orbs -->
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+
+<!-- Scroll progress dots -->
+<div id="sprog">
+  <div class="sp-dot active" data-sec="hero" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="about" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="skills" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="projects" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="experience" onclick="document.getElementById('experience').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="certs" onclick="document.getElementById('certs').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="testimonials" onclick="document.getElementById('testimonials').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="sp-dot" data-sec="contact" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">RB.</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="particles"></canvas>
+  <div class="hero-inner">
+    <p class="h-tag">👋 Software Engineer · Hyderabad, India</p>
+    <h1 class="h-name">Rithwick<br/>Bathini</h1>
+    <p class="h-title"><span class="tw" id="tw"></span><span class="cursor"></span></p>
+    <p class="h-sub">I build AI-powered applications, data pipelines, and software solutions that turn complex problems into clean, working products.</p>
+    <div class="h-cta">
+      <a href="#projects" class="btn-p">View My Work</a>
+      <a href="#contact" class="btn-s">Get In Touch</a>
+    </div>
+    <div class="scroll-hint"><span>Scroll</span><div class="sline"></div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sw">
+    <div class="about-grid">
+      <div class="rv">
+        <div class="avatar" style="margin-bottom:1.5rem"><span>🧑‍💻</span></div>
+        <div class="stats-grid">
+          <div class="gc stat-c rv d1"><div class="stat-n" data-target="2" data-suffix="+">0</div><div class="stat-l">Years Experience</div></div>
+          <div class="gc stat-c rv d2"><div class="stat-n" data-target="4" data-suffix="+">0</div><div class="stat-l">Projects Shipped</div></div>
+          <div class="gc stat-c rv d3"><div class="stat-n" data-target="500" data-suffix="K+">0</div><div class="stat-l">Records Analyzed</div></div>
+          <div class="gc stat-c rv d4"><div class="stat-n" data-target="3" data-suffix="">0</div><div class="stat-l">AI Integrations</div></div>
+        </div>
+      </div>
+      <div class="rv d2">
+        <p class="slabel">About Me</p>
+        <h2 class="sh">Building products that actually solve problems.</h2>
+        <p class="ssub">I'm a Software Engineer at CloudEon Tech, Hyderabad — developing and maintaining enterprise applications, collaborating across engineering teams, and driving software solutions through the full development lifecycle.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:1rem">I hold a B.Tech in Computer Science with a specialization in <span style="color:var(--c);font-weight:500">Artificial Intelligence</span> from Parul University. My work spans AI voice bots, data analytics platforms, Python automation tools, and API-driven software — all built with a focus on real-world impact and clean, maintainable code.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">I'm a quick learner who adapts fast, solves real problems, and is always excited to contribute, grow, and take on the next challenge.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sw">
+    <div class="rv"><p class="slabel">What I Work With</p><h2 class="sh">Skills & Technologies</h2><p class="ssub">A practical stack built through real projects — not just tutorials.</p></div>
+    <div class="skills-grid">
+      <div class="gc sk-card rv d1"><div class="sk-title"><span class="sk-icon">🐍</span>Languages & Backend</div><div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">FastAPI</span><span class="tag">REST APIs</span><span class="tag">Git</span></div></div>
+      <div class="gc sk-card rv d2"><div class="sk-title"><span class="sk-icon">🤖</span>AI & Voice</div><div class="tags"><span class="tag">OpenAI API</span><span class="tag">Deepgram STT</span><span class="tag">Twilio</span><span class="tag">Prompt Eng.</span><span class="tag">LLM Integration</span></div></div>
+      <div class="gc sk-card rv d3"><div class="sk-title"><span class="sk-icon">📊</span>Data & Analytics</div><div class="tags"><span class="tag">Pandas</span><span class="tag">NumPy</span><span class="tag">Power BI</span><span class="tag">Plotly</span><span class="tag">Matplotlib</span><span class="tag">EDA</span></div></div>
+      <div class="gc sk-card rv d4"><div class="sk-title"><span class="sk-icon">☁️</span>Web & Platforms</div><div class="tags"><span class="tag">Streamlit</span><span class="tag">PostgreSQL</span><span class="tag">Supabase</span><span class="tag">HTML/CSS</span><span class="tag">JavaScript</span></div></div>
+      <div class="gc sk-card rv d1"><div class="sk-title"><span class="sk-icon">⚙️</span>Tools & Concepts</div><div class="tags"><span class="tag">ServiceNow</span><span class="tag">Excel</span><span class="tag">Power BI</span><span class="tag">SDLC</span><span class="tag">Agile</span><span class="tag">Dashboard Dev</span></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sw">
+    <div class="rv"><p class="slabel">What I've Built</p><h2 class="sh">Featured Projects</h2><p class="ssub">Real products shipped — each one solving a concrete problem.</p></div>
+    <div class="proj-grid">
+
+      <!-- P1 -->
+      <div class="gc proj-card rv d1" style="padding:1.75rem">
+        <div class="proj-svg">
+          <svg width="220" height="110" viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="55" y="12" width="110" height="16" rx="4" fill="rgba(124,58,237,0.25)" stroke="rgba(124,58,237,0.5)" stroke-width="1"/>
+            <rect x="55" y="34" width="110" height="16" rx="4" fill="rgba(124,58,237,0.18)" stroke="rgba(124,58,237,0.4)" stroke-width="1"/>
+            <rect x="55" y="56" width="110" height="16" rx="4" fill="rgba(124,58,237,0.12)" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+            <text x="110" y="24" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="monospace">attachment_001.pdf</text>
+            <text x="110" y="46" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="monospace">attachment_002.pdf</text>
+            <text x="110" y="68" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="monospace">attachment_003.pdf</text>
+            <path d="M110 78 L110 96" stroke="#22d3ee" stroke-width="2" stroke-dasharray="3,2"/>
+            <polygon points="110,100 104,90 116,90" fill="#22d3ee"/>
+            <circle cx="175" cy="55" r="18" stroke="rgba(34,211,238,0.5)" stroke-width="2" fill="none" stroke-dasharray="6,3"/>
+            <circle cx="175" cy="55" r="11" stroke="#22d3ee" stroke-width="1.5" fill="none"/>
+            <text x="175" y="59" text-anchor="middle" fill="#22d3ee" font-size="8" font-family="monospace">✓</text>
+          </svg>
+        </div>
+        <div class="proj-num">01 · Python · Enterprise Tool</div>
+        <div class="proj-name">ServiceNow Attachment Downloader</div>
+        <div class="proj-desc">Production-grade Python tool for large-scale attachment downloads from ServiceNow. Features resumable downloads, server-side pagination, automatic error handling, and retry logic — designed to operate reliably at enterprise scale without data loss.</div>
+        <div class="proj-impact">⚡ Handles thousands of attachments reliably at enterprise scale.</div>
+        <div class="proj-tech"><span class="tech">Python</span><span class="tech">REST APIs</span><span class="tech">ServiceNow</span><span class="tech">Pagination</span></div>
+        <div class="proj-links"><a href="#" class="plink">⌥ GitHub</a></div>
+      </div>
+
+      <!-- P2 -->
+      <div class="gc proj-card rv d2" style="padding:1.75rem">
+        <div class="proj-svg">
+          <svg width="220" height="110" viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="38" width="44" height="34" rx="8" fill="rgba(244,114,182,0.15)" stroke="rgba(244,114,182,0.4)" stroke-width="1.2"/>
+            <rect x="27" y="62" width="30" height="6" rx="3" fill="rgba(244,114,182,0.25)"/>
+            <circle cx="42" cy="50" r="8" fill="rgba(244,114,182,0.2)" stroke="rgba(244,114,182,0.5)" stroke-width="1"/>
+            <text x="42" y="54" text-anchor="middle" fill="#f472b6" font-size="10">📞</text>
+            <path d="M64 55 Q95 35 120 55" stroke="#f472b6" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.6"/>
+            <path d="M64 55 Q95 75 120 55" stroke="#22d3ee" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.6"/>
+            <g transform="translate(108,38)">
+              <rect width="50" height="34" rx="8" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.4)" stroke-width="1.2"/>
+              <text x="25" y="16" text-anchor="middle" fill="#22d3ee" font-size="7" font-family="monospace">AI BRAIN</text>
+              <rect x="8" y="20" width="34" height="5" rx="2" fill="rgba(34,211,238,0.25)"/>
+              <rect x="8" y="27" width="22" height="5" rx="2" fill="rgba(34,211,238,0.15)"/>
+            </g>
+            <path d="M158 55 Q175 40 190 55 Q175 70 158 55Z" fill="rgba(124,58,237,0.2)" stroke="rgba(124,58,237,0.4)" stroke-width="1"/>
+            <text x="174" y="59" text-anchor="middle" fill="#a78bfa" font-size="8">🗣</text>
+            <text x="42" y="90" text-anchor="middle" fill="#f472b6" font-size="7" font-family="monospace">CUSTOMER</text>
+            <text x="133" y="90" text-anchor="middle" fill="#22d3ee" font-size="7" font-family="monospace">GPT + DEEPGRAM</text>
+            <text x="174" y="90" text-anchor="middle" fill="#a78bfa" font-size="7" font-family="monospace">TWILIO</text>
+          </svg>
+        </div>
+        <div class="proj-num">02 · AI · Voice · Real-Time</div>
+        <div class="proj-name">Restaurant Voice AI Bot</div>
+        <div class="proj-desc">Fully conversational AI phone bot enabling customers to place restaurant orders through natural speech. Integrated Deepgram for real-time STT, OpenAI for intent understanding, and Twilio for telephony — orchestrated via a FastAPI backend.</div>
+        <div class="proj-impact">⚡ Customers order naturally by phone — zero human operator needed.</div>
+        <div class="proj-tech"><span class="tech">Python</span><span class="tech">Deepgram</span><span class="tech">OpenAI</span><span class="tech">Twilio</span><span class="tech">FastAPI</span></div>
+        <div class="proj-links"><a href="#" class="plink">⌥ GitHub</a><a href="#" class="plink">↗ Live Demo</a></div>
+      </div>
+
+      <!-- P3 -->
+      <div class="gc proj-card rv d3" style="padding:1.75rem">
+        <div class="proj-svg">
+          <svg width="220" height="110" viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="25" y1="95" x2="200" y2="95" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="25" y1="95" x2="25" y2="15" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <rect x="40" y="65" width="22" height="30" rx="3" fill="rgba(34,211,238,0.3)" stroke="rgba(34,211,238,0.5)" stroke-width="1"/>
+            <rect x="74" y="48" width="22" height="47" rx="3" fill="rgba(34,211,238,0.4)" stroke="rgba(34,211,238,0.6)" stroke-width="1"/>
+            <rect x="108" y="38" width="22" height="57" rx="3" fill="rgba(124,58,237,0.4)" stroke="rgba(124,58,237,0.6)" stroke-width="1"/>
+            <rect x="142" y="25" width="22" height="70" rx="3" fill="rgba(124,58,237,0.55)" stroke="rgba(124,58,237,0.7)" stroke-width="1"/>
+            <rect x="176" y="18" width="22" height="77" rx="3" fill="rgba(124,58,237,0.7)" stroke="rgba(124,58,237,0.9)" stroke-width="1"/>
+            <polyline points="51,65 85,48 119,38 153,25 187,18" stroke="#22d3ee" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="51" cy="65" r="3" fill="#22d3ee"/>
+            <circle cx="85" cy="48" r="3" fill="#22d3ee"/>
+            <circle cx="119" cy="38" r="3" fill="#22d3ee"/>
+            <circle cx="153" cy="25" r="3" fill="#22d3ee"/>
+            <circle cx="187" cy="18" r="3" fill="#22d3ee"/>
+            <text x="51" y="108" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="monospace">Q1</text>
+            <text x="85" y="108" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="monospace">Q2</text>
+            <text x="119" y="108" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="monospace">Q3</text>
+            <text x="153" y="108" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="monospace">Q4</text>
+            <text x="187" y="108" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="monospace">Q5</text>
+          </svg>
+        </div>
+        <div class="proj-num">03 · Data Analytics · BI</div>
+        <div class="proj-name">Retail Sales Analytics</div>
+        <div class="proj-desc">End-to-end retail analytics pipeline analyzing 500,000+ transaction records. Built data cleaning, transformation, and KPI aggregation layers in Python/SQL, then delivered executive-level Power BI dashboards for revenue and regional performance.</div>
+        <div class="proj-impact">⚡ Turned 500K+ raw records into executive-level business insights.</div>
+        <div class="proj-tech"><span class="tech">Python</span><span class="tech">SQL</span><span class="tech">Power BI</span><span class="tech">Pandas</span></div>
+        <div class="proj-links"><a href="#" class="plink">⌥ GitHub</a></div>
+      </div>
+
+      <!-- P4 -->
+      <div class="gc proj-card rv d4" style="padding:1.75rem">
+        <div class="proj-svg">
+          <svg width="220" height="110" viewBox="0 0 220 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="58" cy="35" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <circle cx="82" cy="28" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <circle cx="46" cy="52" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <circle cx="72" cy="48" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <circle cx="96" cy="42" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <circle cx="62" cy="65" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <circle cx="88" cy="60" r="6" fill="rgba(34,211,238,0.6)" stroke="rgba(34,211,238,0.9)" stroke-width="1"/>
+            <text x="30" y="20" fill="#22d3ee" font-size="7" font-family="monospace">RETAINED</text>
+            <path d="M30 75 Q110 30 190 75" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
+            <text x="125" y="72" fill="#a78bfa" font-size="7" font-family="monospace">boundary</text>
+            <circle cx="142" cy="68" r="6" fill="rgba(244,114,182,0.6)" stroke="rgba(244,114,182,0.9)" stroke-width="1"/>
+            <circle cx="162" cy="80" r="6" fill="rgba(244,114,182,0.6)" stroke="rgba(244,114,182,0.9)" stroke-width="1"/>
+            <circle cx="150" cy="88" r="6" fill="rgba(244,114,182,0.6)" stroke="rgba(244,114,182,0.9)" stroke-width="1"/>
+            <circle cx="172" cy="65" r="6" fill="rgba(244,114,182,0.6)" stroke="rgba(244,114,182,0.9)" stroke-width="1"/>
+            <circle cx="182" cy="82" r="6" fill="rgba(244,114,182,0.6)" stroke="rgba(244,114,182,0.9)" stroke-width="1"/>
+            <circle cx="162" cy="94" r="6" fill="rgba(244,114,182,0.6)" stroke="rgba(244,114,182,0.9)" stroke-width="1"/>
+            <text x="145" y="20" fill="#f472b6" font-size="7" font-family="monospace">CHURNED</text>
+          </svg>
+        </div>
+        <div class="proj-num">04 · Machine Learning · Predictive</div>
+        <div class="proj-name">Customer Churn Prediction</div>
+        <div class="proj-desc">Applied machine learning to predict customer churn probability from behavioral data. Performed full exploratory data analysis, feature engineering, and trained a logistic regression classifier. Delivered churn-driver reports and retention recommendations.</div>
+        <div class="proj-impact">⚡ ML model identifies at-risk customers before they churn.</div>
+        <div class="proj-tech"><span class="tech">Python</span><span class="tech">Pandas</span><span class="tech">Logistic Reg.</span><span class="tech">Matplotlib</span></div>
+        <div class="proj-links"><a href="#" class="plink">⌥ GitHub</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sw">
+    <div class="rv"><p class="slabel">Where I've Worked</p><h2 class="sh">Experience</h2><p class="ssub">Building and shipping across enterprise and startup environments.</p></div>
+    <div class="timeline rv d1">
+      <div class="titem">
+        <div class="tdot" style="background:var(--c);color:var(--c)"></div>
+        <div class="gc tcard">
+          <div class="tperiod">Jan 2026 – Present</div>
+          <div class="trole">Software Engineer</div>
+          <div class="tco">CloudEon Tech Pvt Ltd · Hyderabad, India</div>
+          <div class="tdesc">Developing and maintaining enterprise software applications. Collaborating with cross-functional engineering teams on feature implementation, debugging, testing, and deployment. Supporting full software development lifecycle.</div>
+        </div>
+      </div>
+      <div class="titem">
+        <div class="tdot" style="background:var(--v);color:var(--v)"></div>
+        <div class="gc tcard">
+          <div class="tperiod">Jun 2025 – Dec 2025</div>
+          <div class="trole">Software Engineering Intern</div>
+          <div class="tco">CloudEon Tech Pvt Ltd · Hyderabad, India</div>
+          <div class="tdesc">Contributed to software development, feature implementation, and agile workflows. Built hands-on exposure to production-grade software lifecycle, testing, and team collaboration practices.</div>
+        </div>
+      </div>
+      <div class="titem">
+        <div class="tdot" style="background:var(--r);color:var(--r)"></div>
+        <div class="gc tcard">
+          <div class="tperiod">2021 – 2025</div>
+          <div class="trole">B.Tech, Computer Science (AI Specialization)</div>
+          <div class="tco">Parul University</div>
+          <div class="tdesc">CGPA: 6.81/10. Specialization in Artificial Intelligence. Multidisciplinary project work spanning software, data analytics, and AI domains.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <div class="sw">
+    <div class="rv"><p class="slabel">Credentials</p><h2 class="sh">Certifications</h2></div>
+    <div class="cert-track-wrap rv d1">
+      <div class="cert-track" id="certTrack">
+        <div class="cert-badge"><span class="cert-org">Infosys</span>Fundamentals of Information Security</div>
+        <div class="cert-badge"><span class="cert-org">Cisco</span>Networking Essentials</div>
+        <div class="cert-badge"><span class="cert-org">HackerRank</span>Python (Gold)</div>
+        <div class="cert-badge"><span class="cert-org">HackerRank</span>SQL (Gold)</div>
+        <div class="cert-badge"><span class="cert-org">Oracle</span>AI Foundations Associate</div>
+        <div class="cert-badge"><span class="cert-org">Oracle</span>AI Developer Associate</div>
+        <div class="cert-badge"><span class="cert-org">Oracle</span>Redwood Platform</div>
+        <div class="cert-badge"><span class="cert-org">Infosys</span>Fundamentals of Information Security</div>
+        <div class="cert-badge"><span class="cert-org">Cisco</span>Networking Essentials</div>
+        <div class="cert-badge"><span class="cert-org">HackerRank</span>Python (Gold)</div>
+        <div class="cert-badge"><span class="cert-org">HackerRank</span>SQL (Gold)</div>
+        <div class="cert-badge"><span class="cert-org">Oracle</span>AI Foundations Associate</div>
+        <div class="cert-badge"><span class="cert-org">Oracle</span>AI Developer Associate</div>
+        <div class="cert-badge"><span class="cert-org">Oracle</span>Redwood Platform</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="sw">
+    <div class="rv"><p class="slabel">What People Say</p><h2 class="sh">Testimonials</h2></div>
+    <div class="test-grid">
+      <div class="gc test-card rv d1">
+        <div class="qmark">"</div>
+        <p class="ttext">Rithwick joined as an intern and within months was owning critical features independently. His ability to break down complex requirements and deliver clean, working code under real deadlines is genuinely rare. He's the kind of engineer you build a team around.</p>
+        <div class="tauthor">
+          <div class="tav" style="background:rgba(124,58,237,.25);color:#a78bfa">PM</div>
+          <div><div class="tname">Vikram S.</div><div class="trole2">Project Manager · CloudEon Tech</div></div>
+        </div>
+      </div>
+      <div class="gc test-card rv d2">
+        <div class="qmark">"</div>
+        <p class="ttext">The Voice AI Bot he built from scratch genuinely impressed me. Integrating Deepgram, OpenAI, and Twilio into a coherent real-time pipeline is non-trivial — and he pulled it off self-driven, with minimal guidance. His API instincts are well above his experience level.</p>
+        <div class="tauthor">
+          <div class="tav" style="background:rgba(34,211,238,.18);color:#22d3ee">SD</div>
+          <div><div class="tname">Sneha D.</div><div class="trole2">Senior Developer · CloudEon Tech</div></div>
+        </div>
+      </div>
+      <div class="gc test-card rv d3">
+        <div class="qmark">"</div>
+        <p class="ttext">His retail analytics work stood out for the clarity of insight, not just the technical execution. Most students get lost in the data — Rithwick always knew what question he was answering. His Power BI dashboards told a story that executives could act on immediately.</p>
+        <div class="tauthor">
+          <div class="tav" style="background:rgba(244,114,182,.18);color:#f472b6">AP</div>
+          <div><div class="tname">Dr. A. Patel</div><div class="trole2">Faculty · Parul University</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sw">
+    <div class="contact-grid">
+      <div class="rv">
+        <p class="slabel">Let's Connect</p>
+        <h2 class="sh">Get In Touch</h2>
+        <p class="ssub" style="margin-bottom:0">Whether it's a job opportunity, a project, or just a conversation about tech — my inbox is always open.</p>
+        <ul class="cinfo-list">
+          <li><span class="ci">📧</span><a href="mailto:rithwickbathini@gmail.com">rithwickbathini@gmail.com</a></li>
+          <li><span class="ci">📱</span>+91 9347140112</li>
+          <li><span class="ci">📍</span>Hyderabad, India</li>
+          <li><span class="ci">💼</span><a href="https://linkedin.com/in/rithwickbathini" target="_blank">linkedin.com/in/rithwickbathini</a></li>
+          <li><span class="ci">🐙</span><a href="https://github.com/rithwickbathini" target="_blank">github.com/rithwickbathini</a></li>
+        </ul>
+      </div>
+      <div class="gc cform rv d2">
+        <div class="frow">
+          <div class="fg"><label>Name</label><input type="text" id="f-name" placeholder="Your Name"/></div>
+          <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="you@email.com"/></div>
+        </div>
+        <div class="fg"><label>Subject</label><input type="text" id="f-sub" placeholder="Job opportunity / Project inquiry"/></div>
+        <div class="fg"><label>Message</label><textarea id="f-msg" placeholder="Tell me about the opportunity..."></textarea></div>
+        <button class="submit" onclick="sendMsg()">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & built by <strong>Rithwick Bathini</strong> · Hyderabad, India · 2026 · <a href="#hero">Back to top ↑</a></p>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.transform=`translate(${mx-5}px,${my-5}px)`});
+(function animR(){rx+=(mx-rx)*0.13;ry+=(my-ry)*0.13;curR.style.transform=`translate(${rx-20}px,${ry-20}px)`;requestAnimationFrame(animR)})();
+document.querySelectorAll('a,button,.gc,.tag,.sp-dot').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{curR.style.width='62px';curR.style.height='62px';curR.style.borderColor='rgba(244,114,182,.7)'});
+  el.addEventListener('mouseleave',()=>{curR.style.width='40px';curR.style.height='40px';curR.style.borderColor='rgba(124,58,237,.55)'});
+});
+
+// ── NAV SCROLL ──
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>50)});
+
+// ── TYPEWRITER ──
+const titles=['Software Engineer','AI Developer','Data Analyst'];
+let ti=0,ci=0,del=false;
+const twEl=document.getElementById('tw');
+function type(){
+  const t=titles[ti];
+  if(!del){twEl.textContent=t.slice(0,++ci);if(ci===t.length){del=true;setTimeout(type,2200);return}}
+  else{twEl.textContent=t.slice(0,--ci);if(ci===0){del=false;ti=(ti+1)%titles.length}}
+  setTimeout(type,del?45:75);
+}
+type();
+
+// ── PARTICLES ──
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',()=>{resize();init()});
+const cols=['rgba(124,58,237,.5)','rgba(34,211,238,.45)','rgba(244,114,182,.4)'];
+function init(){
+  pts=[];
+  const n=window.innerWidth<768?50:100;
+  for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,c:cols[Math.floor(Math.random()*3)]});
+}
+init();
+let pmx=W/2,pmy=H/2;
+document.addEventListener('mousemove',e=>{pmx=e.clientX;pmy=e.clientY});
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    const dx=pmx-p.x,dy=pmy-p.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<110){p.x-=dx*.02;p.y-=dy*.02}
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle=p.c;ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(124,58,237,${.18*(1-d/130)})`;ctx.lineWidth=.6;ctx.stroke()}
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+// ── PARALLAX ORBS ──
+const o1=document.querySelector('.o1'),o2=document.querySelector('.o2'),o3=document.querySelector('.o3');
+document.addEventListener('mousemove',e=>{
+  const x=(e.clientX/window.innerWidth-.5)*60,y=(e.clientY/window.innerHeight-.5)*60;
+  o1.style.transform=`translate(${x*.4}px,${y*.4}px)`;
+  o2.style.transform=`translate(${-x*.28}px,${-y*.28}px)`;
+  o3.style.transform=`translate(${x*.18}px,${y*.45}px)`;
+});
+
+// ── SCROLL REVEAL ──
+const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+
+// ── COUNTER ──
+let counted=false;
+const counterObs=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting&&!counted){
+    counted=true;
+    document.querySelectorAll('[data-target]').forEach(el=>{
+      const end=+el.dataset.target,suf=el.dataset.suffix||'',dur=2000,start=performance.now();
+      function step(now){const p=Math.min((now-start)/dur,1),ease=1-Math.pow(1-p,4);el.textContent=Math.round(ease*end)+(p===1?suf:'');if(p<1)requestAnimationFrame(step)}
+      requestAnimationFrame(step);
+    });
+  }
+},{threshold:.3});
+document.querySelectorAll('.stats-grid').forEach(el=>counterObs.observe(el));
+
+// ── NAV ACTIVE + SCROLL DOTS ──
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+const dots=document.querySelectorAll('.sp-dot');
+const secObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const al=document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if(al)al.classList.add('active');
+      dots.forEach(d=>{d.classList.remove('active');if(d.dataset.sec===e.target.id)d.classList.add('active')});
+    }
+  });
+},{threshold:.4});
+sections.forEach(s=>secObs.observe(s));
+
+// ── CONTACT FORM ──
+function sendMsg(){
+  const n=document.getElementById('f-name').value.trim();
+  const e=document.getElementById('f-email').value.trim();
+  const s=document.getElementById('f-sub').value.trim();
+  const m=document.getElementById('f-msg').value.trim();
+  if(!n||!e||!s||!m){alert('Please fill in all fields.');return}
+  if(!/\S+@\S+\.\S+/.test(e)){alert('Please enter a valid email.');return}
+  const t=document.getElementById('toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+  document.getElementById('f-name').value='';document.getElementById('f-email').value='';
+  document.getElementById('f-sub').value='';document.getElementById('f-msg').value='';
+}
+</script>
+</body>
+</html>
