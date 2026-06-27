@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Rithwick Bathini — Software Engineer & AI Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        bg:      '#f5f7fb',
+        bgAlt:   '#eef1f7',
+        surface: '#ffffff',
+        ink:     '#0f172a',
+        ink2:    '#1e293b',
+        muted:   '#475569',
+        soft:    '#64748b',
+        line:    '#e2e8f0',
+        accent:  '#6366f1',    // indigo-500
+        accent2: '#8b5cf6',    // violet-500
+        accent3: '#06b6d4',    // teal-cyan accent
+      },
+      fontFamily: {
+        sans: ['Plus Jakarta Sans','ui-sans-serif','system-ui','sans-serif'],
+        mono: ['JetBrains Mono','ui-monospace','monospace'],
+      },
+      boxShadow: {
+        soft:   '0 1px 2px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.05)',
+        card:   '0 2px 4px rgba(15,23,42,.04), 0 10px 24px -8px rgba(15,23,42,.10), 0 24px 48px -16px rgba(99,102,241,.10)',
+        lift:   '0 8px 16px -4px rgba(15,23,42,.08), 0 24px 48px -12px rgba(99,102,241,.22), 0 40px 80px -24px rgba(139,92,246,.18)',
+        press:  'inset 0 1px 0 rgba(255,255,255,.6), 0 1px 0 rgba(15,23,42,.04)',
+        btn:    '0 1px 0 rgba(255,255,255,.7) inset, 0 4px 0 #4338ca, 0 10px 20px -6px rgba(99,102,241,.45)',
+        btnPress:'0 1px 0 rgba(255,255,255,.7) inset, 0 1px 0 #4338ca, 0 4px 10px -4px rgba(99,102,241,.35)',
+        ghost:  '0 1px 0 rgba(255,255,255,.8) inset, 0 4px 0 #cbd5e1, 0 8px 16px -6px rgba(15,23,42,.10)',
+      },
+    },
+  },
+};
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background: #f5f7fb;
+    color: #0f172a;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    perspective: 1400px;
+    perspective-origin: 50% 30%;
+  }
+  /* Soft pastel grid + radial backdrop */
+  body::before {
+    content:''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(1000px 600px at 8% -5%, rgba(99,102,241,.10), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(139,92,246,.10), transparent 60%),
+      radial-gradient(800px 600px at 50% 120%, rgba(6,182,212,.06), transparent 60%),
+      linear-gradient(180deg, #f5f7fb 0%, #eef1f7 100%);
+  }
+  body::after {
+    content:''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
+    background-image:
+      linear-gradient(rgba(15,23,42,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,23,42,.045) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+
+  /* Floating pastel blobs */
+  .blob { position:absolute; border-radius:9999px; filter: blur(60px); opacity:.55; pointer-events:none; }
+
+  /* Reveal animations (side entrance + rotateY) */
+  .reveal { opacity: 0; will-change: transform, opacity; transition: opacity .85s cubic-bezier(.2,.7,.2,1), transform .85s cubic-bezier(.2,.7,.2,1); transform-style: preserve-3d; }
+  .reveal.from-left  { transform: translateX(-100px) rotateY(-25deg); }
+  .reveal.from-right { transform: translateX(100px)  rotateY(25deg); }
+  .reveal.from-bottom{ transform: translateY(60px)   rotateX(12deg); }
+  .reveal.visible    { opacity: 1; transform: translateX(0) translateY(0) rotateX(0) rotateY(0); }
+
+  @media (max-width: 768px) {
+    .reveal.from-left  { transform: translateX(-40px) rotateY(-10deg); }
+    .reveal.from-right { transform: translateX(40px)  rotateY(10deg); }
+    .reveal.from-bottom{ transform: translateY(30px)  rotateX(6deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.from-left, .reveal.from-right, .reveal.from-bottom { opacity: 1; transform: none; transition: none; }
+    .parallax { transform: none !important; }
+    .tilt-card { transform: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* 3D button (pressable) */
+  .btn3d {
+    position:relative; display:inline-flex; align-items:center; justify-content:center;
+    padding:.95rem 1.6rem; font-weight:600; border-radius:.9rem;
+    transition: transform .12s ease, box-shadow .12s ease;
+    transform: translateZ(0);
+  }
+  .btn3d:active { transform: translateY(3px); }
+  .btn-primary { background: linear-gradient(180deg,#7c7df7,#6366f1); color:#fff; box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 4px 0 #4338ca, 0 10px 20px -6px rgba(99,102,241,.45); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 5px 0 #4338ca, 0 14px 26px -8px rgba(99,102,241,.55); }
+  .btn-primary:active{ box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 1px 0 #4338ca, 0 4px 10px -4px rgba(99,102,241,.35); }
+  .btn-ghost-3d { background:#ffffff; color:#1e293b; border:1px solid #e2e8f0; box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 4px 0 #cbd5e1, 0 8px 16px -6px rgba(15,23,42,.10); }
+  .btn-ghost-3d:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 5px 0 #cbd5e1, 0 12px 22px -8px rgba(15,23,42,.14); }
+  .btn-ghost-3d:active{ box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 1px 0 #cbd5e1, 0 4px 10px -4px rgba(15,23,42,.10); }
+
+  /* 3D tilt cards */
+  .tilt-card { transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease; transform-style: preserve-3d; will-change: transform; }
+  .tilt-card .tilt-inner { transform-style: preserve-3d; }
+  .tilt-card .tilt-pop { transform: translateZ(28px); }
+
+  /* Frosted nav */
+  .glass-nav {
+    background: rgba(255,255,255,.65);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border-bottom: 1px solid rgba(226,232,240,.7);
+  }
+
+  /* Marquee */
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { animation: marquee 38s linear infinite; }
+
+  /* Typewriter cursor */
+  @keyframes blink { 0%,49% {opacity:1} 50%,100% {opacity:0} }
+  .tw-cursor { display:inline-block; width:3px; height:1.05em; background: linear-gradient(180deg,#6366f1,#8b5cf6); margin-left:6px; vertical-align: -2px; animation: blink 1s steps(1) infinite; border-radius:2px; }
+
+  /* Tag pill */
+  .pill { display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .7rem; border-radius:9999px; font-size:.78rem; font-weight:500; background:#eef2ff; color:#4338ca; border:1px solid #e0e7ff; }
+
+  /* Section heading underline accent */
+  .accent-em { background: linear-gradient(135deg,#6366f1,#8b5cf6 60%,#06b6d4); -webkit-background-clip: text; background-clip: text; color: transparent; font-style: italic; }
+
+  /* Float subtle */
+  @keyframes floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+  .floaty { animation: floaty 7s ease-in-out infinite; }
+
+  /* Mobile nav drawer */
+  .nav-drawer { transform: translateX(100%); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  .nav-drawer.open { transform: translateX(0); }
+
+  /* Disable tilt transforms on touch */
+  @media (hover: none) {
+    .tilt-card { transform: none !important; }
+  }
+
+  /* Project card SVG hue */
+  .pcard svg { display:block; }
+
+  /* Scroll progress */
+  #sprogress { position: fixed; top:0; left:0; height:3px; width:0%; z-index:60; background: linear-gradient(90deg,#6366f1,#8b5cf6,#06b6d4); transition: width .1s linear; }
+
+  /* Toast */
+  .toast { position: fixed; right: 1.5rem; bottom: 1.5rem; padding: 1rem 1.25rem; background:#ffffff; border:1px solid #e2e8f0; border-radius: .9rem; box-shadow: 0 20px 40px -12px rgba(15,23,42,.18); transform: translateY(20px); opacity:0; pointer-events:none; transition: all .35s ease; z-index:80; }
+  .toast.show { transform: translateY(0); opacity:1; }
+
+  /* Hide scrollbar for marquee/cert track */
+  .no-bar::-webkit-scrollbar { display:none; }
+  .no-bar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body class="overflow-x-hidden">
+
+<div id="sprogress"></div>
+
+<!-- NAV -->
+<nav id="nav" class="glass-nav fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#hero" class="font-extrabold tracking-tight text-lg text-ink">
+      <span class="inline-block bg-gradient-to-br from-accent to-accent2 text-white rounded-lg px-2 py-1 shadow-soft">RB.</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-7 text-sm font-medium text-muted">
+      <li><a href="#about" class="hover:text-accent transition">About</a></li>
+      <li><a href="#projsec" class="hover:text-accent transition">Projects</a></li>
+      <li><a href="#skills" class="hover:text-accent transition">Skills</a></li>
+      <li><a href="#experience" class="hover:text-accent transition">Experience</a></li>
+      <li><a href="#contact" class="hover:text-accent transition">Contact</a></li>
+    </ul>
+    <a href="#contact" class="hidden md:inline-flex btn3d btn-primary text-sm" style="padding:.55rem 1rem">Hire Me</a>
+    <button id="navHam" class="md:hidden w-10 h-10 rounded-lg bg-white border border-line shadow-soft flex flex-col gap-1.5 items-center justify-center" aria-label="Toggle menu">
+      <span class="w-5 h-0.5 bg-ink rounded"></span>
+      <span class="w-5 h-0.5 bg-ink rounded"></span>
+      <span class="w-5 h-0.5 bg-ink rounded"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer -->
+<div id="navDrawer" class="nav-drawer md:hidden fixed top-16 right-0 bottom-0 w-72 z-40 bg-white/95 backdrop-blur border-l border-line shadow-2xl p-7">
+  <ul class="flex flex-col gap-5 text-lg font-semibold text-ink">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projsec">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="btn3d btn-primary mt-8 w-full">Hire Me →</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="hero" class="relative pt-28 md:pt-32 pb-16 md:pb-24">
+  <div class="blob bg-accent/30 w-80 h-80 top-20 -left-20 floaty"></div>
+  <div class="blob bg-accent2/30 w-96 h-96 top-40 -right-24 floaty" style="animation-delay:-3s"></div>
+  <div class="blob bg-accent3/20 w-72 h-72 bottom-0 left-1/3 floaty" style="animation-delay:-5s"></div>
+
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+    <div class="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-line shadow-soft text-xs font-medium text-muted">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-70"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Available for opportunities · Hyderabad, India
+        </div>
+
+        <h1 class="mt-6 font-extrabold tracking-tight text-ink leading-[1.02] text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+          Rithwick<br/>
+          <span class="accent-em not-italic font-extrabold">Bathini.</span>
+        </h1>
+
+        <p class="mt-7 text-xl sm:text-2xl text-muted font-medium">
+          <span id="tw" class="text-ink"></span><span class="tw-cursor"></span>
+        </p>
+
+        <p class="mt-5 text-base sm:text-lg text-soft max-w-xl leading-relaxed">
+          Building AI-powered applications, data pipelines, and software solutions that turn complex problems into clean, working products.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="#projsec" class="btn3d btn-primary">View My Work →</a>
+          <a href="#contact" class="btn3d btn-ghost-3d">Get In Touch</a>
+        </div>
+      </div>
+
+      <!-- Floating 3D stack card -->
+      <div class="relative reveal from-right" style="transform-style:preserve-3d">
+        <div class="absolute -inset-4 bg-gradient-to-br from-accent/20 via-accent2/15 to-accent3/15 rounded-[2rem] blur-2xl"></div>
+        <div class="relative bg-white rounded-[1.6rem] border border-line shadow-lift p-6 tilt-card">
+          <div class="tilt-inner">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-accent to-accent2 grid place-items-center text-white font-bold shadow-soft tilt-pop">RB</div>
+                <div>
+                  <div class="font-semibold text-ink text-sm">Rithwick Bathini</div>
+                  <div class="text-xs text-soft">@rithwickbathini</div>
+                </div>
+              </div>
+              <span class="pill !text-emerald-700 !bg-emerald-50 !border-emerald-100">● Live</span>
+            </div>
+            <div class="mt-5 font-mono text-[11px] bg-bgAlt rounded-xl p-4 text-ink2 leading-relaxed border border-line">
+              <span class="text-accent">const</span> <span class="text-accent2">dev</span> = {<br/>
+              &nbsp;&nbsp;role: <span class="text-emerald-600">'Software Engineer'</span>,<br/>
+              &nbsp;&nbsp;focus: [<span class="text-emerald-600">'AI'</span>, <span class="text-emerald-600">'Data'</span>, <span class="text-emerald-600">'APIs'</span>],<br/>
+              &nbsp;&nbsp;status: <span class="text-emerald-600">'shipping'</span><br/>
+              };
+            </div>
+            <div class="mt-5 grid grid-cols-3 gap-3">
+              <div class="bg-bgAlt rounded-xl p-3 text-center border border-line tilt-pop">
+                <div class="text-2xl font-extrabold text-ink" data-target="2" data-suffix="+">0</div>
+                <div class="text-[10px] text-soft font-medium mt-1">YEARS EXP</div>
+              </div>
+              <div class="bg-bgAlt rounded-xl p-3 text-center border border-line tilt-pop">
+                <div class="text-2xl font-extrabold text-ink" data-target="4" data-suffix="+">0</div>
+                <div class="text-[10px] text-soft font-medium mt-1">PROJECTS</div>
+              </div>
+              <div class="bg-bgAlt rounded-xl p-3 text-center border border-line tilt-pop">
+                <div class="text-2xl font-extrabold text-ink" data-target="3" data-suffix="">0</div>
+                <div class="text-[10px] text-soft font-medium mt-1">AI INTEGR.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MARQUEE ══ -->
+<div class="py-7 bg-white border-y border-line overflow-hidden">
+  <div class="flex marquee-track gap-12 whitespace-nowrap text-sm font-semibold text-soft">
+    <span class="flex items-center gap-12">
+      <span>Software Engineer</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>AI Developer</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Data Analyst</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Python Engineer</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>FastAPI Builder</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>LLM Integration</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Streamlit Apps</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Power BI Dashboards</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+    </span>
+    <span class="flex items-center gap-12" aria-hidden="true">
+      <span>Software Engineer</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>AI Developer</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Data Analyst</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Python Engineer</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>FastAPI Builder</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>LLM Integration</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Streamlit Apps</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span>Power BI Dashboards</span><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+    </span>
+  </div>
+</div>
+
+<!-- ══ ABOUT (odd → from left) ══ -->
+<section id="about" class="py-20 md:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div class="reveal from-left">
+        <div class="relative">
+          <div class="absolute -inset-3 bg-gradient-to-br from-accent/25 via-accent2/15 to-transparent rounded-[2rem] blur-xl"></div>
+          <div class="relative tilt-card rounded-[1.6rem] overflow-hidden border border-line shadow-lift bg-white">
+            <div class="tilt-inner">
+              <div class="aspect-[4/5] overflow-hidden">
+                <img src="profile.jpeg" alt="Rithwick Bathini" class="w-full h-full object-cover parallax" data-parallax/>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -bottom-5 -right-5 bg-white rounded-2xl px-5 py-4 shadow-card border border-line tilt-pop">
+            <div class="text-2xl font-extrabold text-ink">500K+</div>
+            <div class="text-xs text-soft font-medium">Records Analyzed</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal from-right">
+        <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">About Me</p>
+        <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">
+          Building products that actually <span class="accent-em">solve problems.</span>
+        </h2>
+        <div class="mt-6 space-y-4 text-muted leading-relaxed text-[1.02rem]">
+          <p>I'm a Software Engineer at <strong class="text-ink">CloudEon Tech</strong>, Hyderabad — developing and maintaining enterprise applications, collaborating across engineering teams, and driving software solutions through the full development lifecycle.</p>
+          <p>I hold a B.Tech in Computer Science with a specialization in <strong class="text-ink">Artificial Intelligence</strong> from Parul University. My work spans AI voice bots, data analytics platforms, Python automation tools, and API-driven software.</p>
+          <p>I'm a quick learner who adapts fast, solves real problems, and is always excited to contribute, grow, and take on the next challenge.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS (odd → from left) ══ -->
+<section id="projsec" class="py-20 md:py-28 relative">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal from-left max-w-2xl">
+      <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">What I've Built</p>
+      <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">
+        Featured <span class="accent-em">Projects</span>
+      </h2>
+      <p class="mt-4 text-muted">A selection of production tools, AI systems, and analytics pipelines I've shipped.</p>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 gap-7">
+
+      <!-- Project 1 -->
+      <article class="reveal from-left tilt-card relative bg-white rounded-2xl border border-line shadow-card p-7 flex flex-col">
+        <div class="tilt-inner flex flex-col h-full">
+          <div class="h-44 -mx-3 mb-5 rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-line grid place-items-center tilt-pop">
+            <svg width="190" height="140" viewBox="0 0 190 165" fill="none">
+              <rect x="25" y="18" width="140" height="18" rx="5" fill="rgba(99,102,241,.10)" stroke="rgba(99,102,241,.4)" stroke-width="1"/>
+              <rect x="25" y="44" width="140" height="18" rx="5" fill="rgba(99,102,241,.08)" stroke="rgba(99,102,241,.3)" stroke-width="1"/>
+              <rect x="25" y="70" width="140" height="18" rx="5" fill="rgba(99,102,241,.05)" stroke="rgba(99,102,241,.2)" stroke-width="1"/>
+              <text x="95" y="31" text-anchor="middle" fill="#6366f1" font-size="9" font-family="monospace">attachment_001.pdf</text>
+              <text x="95" y="57" text-anchor="middle" fill="#6366f1" font-size="9" font-family="monospace">attachment_002.pdf</text>
+              <text x="95" y="83" text-anchor="middle" fill="#6366f1" font-size="9" font-family="monospace">attachment_003.pdf</text>
+              <path d="M95 92 L95 118" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4,3"/>
+              <polygon points="95,126 87,112 103,112" fill="#8b5cf6"/>
+              <circle cx="152" cy="140" r="14" stroke="#6366f1" stroke-width="2" fill="none"/>
+              <text x="152" y="145" text-anchor="middle" fill="#6366f1" font-size="12">✓</text>
+            </svg>
+          </div>
+          <div class="text-[11px] font-mono font-semibold text-accent">01 · Python · Enterprise Tool</div>
+          <h3 class="mt-1 text-xl font-bold text-ink">ServiceNow Attachment Downloader</h3>
+          <p class="mt-2 text-sm text-muted leading-relaxed">Production-grade Python tool for large-scale attachment downloads from ServiceNow. Features resumable downloads, server-side pagination, automatic error handling, and retry logic — built to operate reliably at enterprise scale.</p>
+          <p class="mt-3 text-sm font-medium text-ink2">⚡ Handles thousands of attachments reliably at enterprise scale.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill">Python</span><span class="pill">REST APIs</span><span class="pill">ServiceNow</span><span class="pill">Pagination</span>
+          </div>
+          <a href="#" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-accent2 transition">↗ View on GitHub</a>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="reveal from-right tilt-card relative bg-white rounded-2xl border border-line shadow-card p-7 flex flex-col">
+        <div class="tilt-inner flex flex-col h-full">
+          <div class="h-44 -mx-3 mb-5 rounded-xl bg-gradient-to-br from-violet-50 to-cyan-50 border border-line grid place-items-center tilt-pop">
+            <svg width="190" height="140" viewBox="0 0 190 165" fill="none">
+              <circle cx="42" cy="68" r="26" fill="rgba(139,92,246,.12)" stroke="rgba(139,92,246,.4)" stroke-width="1.5"/>
+              <text x="42" y="73" text-anchor="middle" fill="#8b5cf6" font-size="16">📞</text>
+              <path d="M68 68 Q105 42 132 68" stroke="#8b5cf6" stroke-width="1.8" fill="none" stroke-dasharray="5,4" opacity=".7"/>
+              <path d="M68 68 Q105 94 132 68" stroke="#6366f1" stroke-width="1.8" fill="none" stroke-dasharray="5,4" opacity=".7"/>
+              <rect x="122" y="46" width="56" height="44" rx="10" fill="rgba(99,102,241,.10)" stroke="rgba(99,102,241,.35)" stroke-width="1.5"/>
+              <text x="150" y="66" text-anchor="middle" fill="#6366f1" font-size="8" font-family="monospace">AI</text>
+              <text x="150" y="78" text-anchor="middle" fill="#6366f1" font-size="7" font-family="monospace">ENGINE</text>
+              <rect x="135" y="82" width="30" height="4" rx="2" fill="rgba(99,102,241,.25)"/>
+              <ellipse cx="150" cy="132" rx="18" ry="14" fill="rgba(139,92,246,.12)" stroke="rgba(139,92,246,.4)" stroke-width="1.5"/>
+              <text x="150" y="137" text-anchor="middle" fill="#8b5cf6" font-size="12">🗣</text>
+            </svg>
+          </div>
+          <div class="text-[11px] font-mono font-semibold text-accent">02 · AI · Voice · Real-Time</div>
+          <h3 class="mt-1 text-xl font-bold text-ink">Restaurant Voice AI Bot</h3>
+          <p class="mt-2 text-sm text-muted leading-relaxed">Fully conversational AI phone bot enabling customers to place restaurant orders through natural speech. Integrates Deepgram for real-time STT, OpenAI for intent understanding, and Twilio for telephony via a FastAPI backend.</p>
+          <p class="mt-3 text-sm font-medium text-ink2">⚡ Zero human operators — customers order naturally by phone.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill">Python</span><span class="pill">Deepgram</span><span class="pill">OpenAI</span><span class="pill">Twilio</span><span class="pill">FastAPI</span>
+          </div>
+          <div class="mt-5 flex gap-5">
+            <a href="#" class="text-sm font-semibold text-accent hover:text-accent2 transition">↗ GitHub</a>
+            <a href="#" class="text-sm font-semibold text-accent hover:text-accent2 transition">↗ Demo</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="reveal from-left tilt-card relative bg-white rounded-2xl border border-line shadow-card p-7 flex flex-col">
+        <div class="tilt-inner flex flex-col h-full">
+          <div class="h-44 -mx-3 mb-5 rounded-xl bg-gradient-to-br from-cyan-50 to-indigo-50 border border-line grid place-items-center tilt-pop">
+            <svg width="190" height="140" viewBox="0 0 190 165" fill="none">
+              <line x1="22" y1="140" x2="178" y2="140" stroke="rgba(99,102,241,.25)" stroke-width="1"/>
+              <line x1="22" y1="140" x2="22" y2="18" stroke="rgba(99,102,241,.25)" stroke-width="1"/>
+              <rect x="34" y="108" width="24" height="32" rx="4" fill="rgba(99,102,241,.15)" stroke="rgba(99,102,241,.35)" stroke-width="1"/>
+              <rect x="67" y="88" width="24" height="52" rx="4" fill="rgba(99,102,241,.25)" stroke="rgba(99,102,241,.5)" stroke-width="1"/>
+              <rect x="100" y="68" width="24" height="72" rx="4" fill="rgba(99,102,241,.35)" stroke="rgba(99,102,241,.6)" stroke-width="1"/>
+              <rect x="133" y="38" width="24" height="102" rx="4" fill="rgba(99,102,241,.45)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <polyline points="46,108 79,88 112,68 145,38" stroke="#6366f1" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="46" cy="108" r="4" fill="#6366f1"/>
+              <circle cx="79" cy="88" r="4" fill="#6366f1"/>
+              <circle cx="112" cy="68" r="4" fill="#6366f1"/>
+              <circle cx="145" cy="38" r="4" fill="#6366f1"/>
+            </svg>
+          </div>
+          <div class="text-[11px] font-mono font-semibold text-accent">03 · Data Analytics · Power BI</div>
+          <h3 class="mt-1 text-xl font-bold text-ink">Retail Sales Analytics Platform</h3>
+          <p class="mt-2 text-sm text-muted leading-relaxed">End-to-end retail analytics pipeline analyzing 500,000+ transaction records. Built data cleaning and KPI aggregation in Python/SQL, then delivered executive-level Power BI dashboards for revenue and regional performance insights.</p>
+          <p class="mt-3 text-sm font-medium text-ink2">⚡ 500K+ raw records turned into actionable executive intelligence.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill">Python</span><span class="pill">SQL</span><span class="pill">Power BI</span><span class="pill">Pandas</span>
+          </div>
+          <a href="#" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-accent2 transition">↗ View on GitHub</a>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="reveal from-right tilt-card relative bg-white rounded-2xl border border-line shadow-card p-7 flex flex-col">
+        <div class="tilt-inner flex flex-col h-full">
+          <div class="h-44 -mx-3 mb-5 rounded-xl bg-gradient-to-br from-rose-50 to-indigo-50 border border-line grid place-items-center tilt-pop">
+            <svg width="190" height="140" viewBox="0 0 190 165" fill="none">
+              <circle cx="62" cy="52" r="7" fill="rgba(99,102,241,.4)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <circle cx="85" cy="40" r="7" fill="rgba(99,102,241,.4)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <circle cx="48" cy="70" r="7" fill="rgba(99,102,241,.4)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <circle cx="74" cy="66" r="7" fill="rgba(99,102,241,.4)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <circle cx="96" cy="56" r="7" fill="rgba(99,102,241,.4)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <circle cx="64" cy="84" r="7" fill="rgba(99,102,241,.4)" stroke="rgba(99,102,241,.7)" stroke-width="1"/>
+              <path d="M24 115 Q95 52 178 115" stroke="rgba(139,92,246,.6)" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+              <circle cx="142" cy="110" r="7" fill="rgba(244,63,94,.3)" stroke="rgba(244,63,94,.7)" stroke-width="1"/>
+              <circle cx="158" cy="124" r="7" fill="rgba(244,63,94,.3)" stroke="rgba(244,63,94,.7)" stroke-width="1"/>
+              <circle cx="148" cy="136" r="7" fill="rgba(244,63,94,.3)" stroke="rgba(244,63,94,.7)" stroke-width="1"/>
+              <circle cx="166" cy="105" r="7" fill="rgba(244,63,94,.3)" stroke="rgba(244,63,94,.7)" stroke-width="1"/>
+              <circle cx="174" cy="124" r="7" fill="rgba(244,63,94,.3)" stroke="rgba(244,63,94,.7)" stroke-width="1"/>
+              <text x="68" y="32" text-anchor="middle" fill="rgba(99,102,241,.65)" font-size="7" font-family="monospace">RETAINED</text>
+              <text x="158" y="98" text-anchor="middle" fill="rgba(244,63,94,.65)" font-size="7" font-family="monospace">CHURN</text>
+            </svg>
+          </div>
+          <div class="text-[11px] font-mono font-semibold text-accent">04 · Machine Learning · Predictive</div>
+          <h3 class="mt-1 text-xl font-bold text-ink">Customer Churn Prediction Model</h3>
+          <p class="mt-2 text-sm text-muted leading-relaxed">Applied machine learning to predict customer churn from behavioral data. Full EDA, feature engineering, and logistic regression classifier with churn-driver reports and actionable retention recommendations for business stakeholders.</p>
+          <p class="mt-3 text-sm font-medium text-ink2">⚡ Identifies at-risk customers before they churn — proactive retention.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill">Python</span><span class="pill">Pandas</span><span class="pill">Logistic Reg.</span><span class="pill">Matplotlib</span>
+          </div>
+          <a href="#" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-accent2 transition">↗ View on GitHub</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ SKILLS (even → from right) ══ -->
+<section id="skills" class="py-20 md:py-28 relative">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal from-right max-w-2xl ml-auto text-right">
+      <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">Tech Stack</p>
+      <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">
+        Skills & <span class="accent-em">Technologies</span>
+      </h2>
+      <p class="mt-4 text-muted">A practical stack built through real projects — not just tutorials.</p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Programming -->
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+        <div class="tilt-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl grid place-items-center text-white shadow-soft tilt-pop" style="background:linear-gradient(135deg,#818cf8,#6366f1)">
+              <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><path d="M8 6L2 12l6 6M16 6l6 6-6 6M14 4L10 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-bold text-ink">Programming</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2"><span class="pill">Python</span><span class="pill">SQL</span><span class="pill">FastAPI</span><span class="pill">REST APIs</span><span class="pill">Java (Basics)</span><span class="pill">C (Basics)</span></div>
+        </div>
+      </div>
+      <!-- AI -->
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+        <div class="tilt-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl grid place-items-center text-white shadow-soft tilt-pop" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">
+              <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><circle cx="12" cy="12" r="3" stroke="white" stroke-width="2"/><circle cx="5" cy="6" r="2" stroke="white" stroke-width="2"/><circle cx="19" cy="6" r="2" stroke="white" stroke-width="2"/><circle cx="5" cy="18" r="2" stroke="white" stroke-width="2"/><circle cx="19" cy="18" r="2" stroke="white" stroke-width="2"/><path d="M7 7l3 3M17 7l-3 3M7 17l3-3M17 17l-3-3" stroke="white" stroke-width="2"/></svg>
+            </div>
+            <span class="font-bold text-ink">AI & Voice</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2"><span class="pill">OpenAI</span><span class="pill">Deepgram (STT)</span><span class="pill">Twilio Voice</span><span class="pill">LLM Integration</span><span class="pill">Prompt Engineering</span></div>
+        </div>
+      </div>
+      <!-- Data -->
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+        <div class="tilt-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl grid place-items-center text-white shadow-soft tilt-pop" style="background:linear-gradient(135deg,#67e8f9,#0891b2)">
+              <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><rect x="3" y="13" width="4" height="8" rx="1.5" fill="white" opacity=".75"/><rect x="10" y="8" width="4" height="13" rx="1.5" fill="white"/><rect x="17" y="3" width="4" height="18" rx="1.5" fill="white" opacity=".75"/></svg>
+            </div>
+            <span class="font-bold text-ink">Data & Analytics</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2"><span class="pill">Pandas</span><span class="pill">NumPy</span><span class="pill">Power BI</span><span class="pill">Plotly</span><span class="pill">Matplotlib</span><span class="pill">EDA</span></div>
+        </div>
+      </div>
+      <!-- Web -->
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+        <div class="tilt-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl grid place-items-center text-white shadow-soft tilt-pop" style="background:linear-gradient(135deg,#d8b4fe,#9333ea)">
+              <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M12 3C9.5 7 9.5 17 12 21M12 3c2.5 4 2.5 14 0 18M3.5 9H20.5M3.5 15H20.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <span class="font-bold text-ink">Web & Platforms</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2"><span class="pill">Streamlit</span><span class="pill">PostgreSQL</span><span class="pill">Supabase</span><span class="pill">HTML/CSS</span><span class="pill">JavaScript</span></div>
+        </div>
+      </div>
+      <!-- Tools -->
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+        <div class="tilt-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl grid place-items-center text-white shadow-soft tilt-pop" style="background:linear-gradient(135deg,#22d3ee,#0e7490)">
+              <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><circle cx="12" cy="12" r="3" stroke="white" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <span class="font-bold text-ink">Tools & Methods</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2"><span class="pill">ServiceNow</span><span class="pill">Excel</span><span class="pill">Power BI</span><span class="pill">SDLC</span><span class="pill">Agile</span><span class="pill">Dashboard Dev</span></div>
+        </div>
+      </div>
+      <!-- ML stack -->
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+        <div class="tilt-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl grid place-items-center text-white shadow-soft tilt-pop" style="background:linear-gradient(135deg,#fda4af,#e11d48)">
+              <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><path d="M4 20V8M10 20V4M16 20v-7M22 20H2" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <span class="font-bold text-ink">Machine Learning</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2"><span class="pill">scikit-learn</span><span class="pill">Logistic Reg.</span><span class="pill">Feature Eng.</span><span class="pill">Model Eval</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPERIENCE (odd → from left) ══ -->
+<section id="experience" class="py-20 md:py-28">
+  <div class="max-w-5xl mx-auto px-5 sm:px-8">
+    <div class="reveal from-left max-w-2xl">
+      <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">Career Path</p>
+      <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">
+        Experience & <span class="accent-em">Education</span>
+      </h2>
+      <p class="mt-4 text-muted">Building and shipping across enterprise and startup environments.</p>
+    </div>
+
+    <div class="mt-12 relative">
+      <div class="absolute left-4 md:left-6 top-2 bottom-2 w-px bg-gradient-to-b from-accent via-accent2 to-transparent"></div>
+
+      <div class="reveal from-left relative pl-14 md:pl-20 mb-8">
+        <div class="absolute left-2 md:left-4 top-3 w-5 h-5 rounded-full bg-white border-4 border-accent shadow-soft"></div>
+        <div class="tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+          <div class="tilt-inner">
+            <div class="text-xs font-mono font-semibold text-accent">Jan 2026 – Present</div>
+            <div class="mt-1 text-lg font-bold text-ink">Software Engineer</div>
+            <div class="text-sm text-soft font-medium">CloudEon Tech Pvt Ltd · Hyderabad, India</div>
+            <p class="mt-3 text-sm text-muted leading-relaxed">Developing and maintaining enterprise software applications. Collaborating with cross-functional teams on feature implementation, debugging, testing, and deployment across the full SDLC.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal from-left relative pl-14 md:pl-20 mb-8">
+        <div class="absolute left-2 md:left-4 top-3 w-5 h-5 rounded-full bg-white border-4 border-accent2 shadow-soft"></div>
+        <div class="tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+          <div class="tilt-inner">
+            <div class="text-xs font-mono font-semibold text-accent2">Jun 2025 – Dec 2025</div>
+            <div class="mt-1 text-lg font-bold text-ink">Software Engineering Intern</div>
+            <div class="text-sm text-soft font-medium">CloudEon Tech Pvt Ltd · Hyderabad, India</div>
+            <p class="mt-3 text-sm text-muted leading-relaxed">Built features and fixed bugs in production codebase. Gained hands-on exposure to agile workflows, code reviews, and professional engineering practices.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal from-left relative pl-14 md:pl-20">
+        <div class="absolute left-2 md:left-4 top-3 w-5 h-5 rounded-full bg-white border-4 border-accent3 shadow-soft"></div>
+        <div class="tilt-card bg-white rounded-2xl border border-line shadow-card p-6">
+          <div class="tilt-inner">
+            <div class="text-xs font-mono font-semibold text-accent3">2021 – 2025</div>
+            <div class="mt-1 text-lg font-bold text-ink">B.Tech, Computer Science (AI Specialization)</div>
+            <div class="text-sm text-soft font-medium">Parul University · CGPA 6.81/10</div>
+            <p class="mt-3 text-sm text-muted leading-relaxed">Specialization in Artificial Intelligence. Multidisciplinary project work spanning software engineering, data analytics, and AI systems design.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CERTS (even → from right) ══ -->
+<section id="certs" class="py-16 md:py-20">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal from-right text-center max-w-2xl mx-auto">
+      <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">Credentials</p>
+      <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">Certifications</h2>
+    </div>
+    <div class="mt-10 overflow-hidden">
+      <div class="flex marquee-track gap-4 whitespace-nowrap" style="animation-duration:50s">
+        <div class="flex gap-4">
+          <span class="cert-badge"><b>Infosys</b>Fundamentals of Information Security</span>
+          <span class="cert-badge"><b>Cisco</b>Networking Essentials</span>
+          <span class="cert-badge"><b>HackerRank</b>Python (Gold)</span>
+          <span class="cert-badge"><b>HackerRank</b>SQL (Gold)</span>
+          <span class="cert-badge"><b>Oracle</b>AI Foundations Associate</span>
+          <span class="cert-badge"><b>Oracle</b>AI Developer Associate</span>
+          <span class="cert-badge"><b>Oracle</b>Redwood Platform</span>
+        </div>
+        <div class="flex gap-4" aria-hidden="true">
+          <span class="cert-badge"><b>Infosys</b>Fundamentals of Information Security</span>
+          <span class="cert-badge"><b>Cisco</b>Networking Essentials</span>
+          <span class="cert-badge"><b>HackerRank</b>Python (Gold)</span>
+          <span class="cert-badge"><b>HackerRank</b>SQL (Gold)</span>
+          <span class="cert-badge"><b>Oracle</b>AI Foundations Associate</span>
+          <span class="cert-badge"><b>Oracle</b>AI Developer Associate</span>
+          <span class="cert-badge"><b>Oracle</b>Redwood Platform</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    .cert-badge { display:inline-flex; align-items:center; gap:.55rem; padding:.65rem 1.1rem; background:#fff; border:1px solid #e2e8f0; border-radius:9999px; box-shadow: 0 2px 6px rgba(15,23,42,.05); font-size:.85rem; color:#1e293b; font-weight:500; }
+    .cert-badge b { color:#6366f1; font-weight:700; font-size:.78rem; }
+  </style>
+</section>
+
+<!-- ══ TESTIMONIALS (odd → from left) ══ -->
+<section id="testimonials" class="py-20 md:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal from-left text-center max-w-2xl mx-auto">
+      <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">Social Proof</p>
+      <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">What People <span class="accent-em">Say</span></h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="reveal from-left tilt-card bg-white rounded-2xl border border-line shadow-card p-7 relative">
+        <div class="tilt-inner">
+          <div class="text-6xl leading-none text-accent/30 font-serif tilt-pop">"</div>
+          <p class="mt-2 text-sm text-muted leading-relaxed">Rithwick joined as an intern and within months was owning critical features independently. His ability to break down complex requirements and deliver clean, working code under real deadlines is genuinely rare.</p>
+          <div class="mt-5 flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-accent/15 text-accent grid place-items-center font-bold text-sm">PM</div>
+            <div><div class="text-sm font-bold text-ink">Vikram S.</div><div class="text-xs text-soft">Project Manager · CloudEon Tech</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal from-bottom tilt-card bg-white rounded-2xl border border-line shadow-card p-7">
+        <div class="tilt-inner">
+          <div class="text-6xl leading-none text-accent2/30 font-serif tilt-pop">"</div>
+          <p class="mt-2 text-sm text-muted leading-relaxed">The Voice AI Bot he built from scratch genuinely impressed me. Integrating Deepgram, OpenAI, and Twilio into a coherent real-time pipeline is non-trivial — and he pulled it off self-driven, with minimal guidance.</p>
+          <div class="mt-5 flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-accent2/15 text-accent2 grid place-items-center font-bold text-sm">SD</div>
+            <div><div class="text-sm font-bold text-ink">Sneha D.</div><div class="text-xs text-soft">Senior Developer · CloudEon Tech</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal from-right tilt-card bg-white rounded-2xl border border-line shadow-card p-7">
+        <div class="tilt-inner">
+          <div class="text-6xl leading-none text-accent3/40 font-serif tilt-pop">"</div>
+          <p class="mt-2 text-sm text-muted leading-relaxed">His retail analytics work stood out for the clarity of insight. Rithwick always knew what question he was answering — his Power BI dashboards told a story executives could act on immediately.</p>
+          <div class="mt-5 flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-accent3/15 text-accent3 grid place-items-center font-bold text-sm">AP</div>
+            <div><div class="text-sm font-bold text-ink">Dr. A. Patel</div><div class="text-xs text-soft">Faculty · Parul University</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT (even → from right) ══ -->
+<section id="contact" class="py-20 md:py-28 relative">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="grid md:grid-cols-2 gap-10 md:gap-14">
+      <div class="reveal from-left">
+        <p class="text-xs font-semibold tracking-[.2em] text-accent uppercase">Let's Connect</p>
+        <h2 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink leading-tight">Get In <span class="accent-em">Touch</span></h2>
+        <p class="mt-5 text-muted leading-relaxed max-w-md">Whether it's a job opportunity, a project, or just a conversation about tech — my inbox is always open.</p>
+        <ul class="mt-8 space-y-3 text-sm">
+          <li class="flex items-center gap-3"><span class="w-9 h-9 grid place-items-center rounded-lg bg-accent/10 text-accent">📧</span><a href="mailto:rithwickbathini@gmail.com" class="text-ink2 hover:text-accent font-medium">rithwickbathini@gmail.com</a></li>
+          <li class="flex items-center gap-3"><span class="w-9 h-9 grid place-items-center rounded-lg bg-accent/10 text-accent">📱</span><span class="text-ink2 font-medium">+91 9347140112</span></li>
+          <li class="flex items-center gap-3"><span class="w-9 h-9 grid place-items-center rounded-lg bg-accent/10 text-accent">📍</span><span class="text-ink2 font-medium">Hyderabad, India</span></li>
+          <li class="flex items-center gap-3"><span class="w-9 h-9 grid place-items-center rounded-lg bg-accent/10 text-accent">💼</span><a href="https://linkedin.com/in/rithwickbathini" target="_blank" class="text-ink2 hover:text-accent font-medium">linkedin.com/in/rithwickbathini</a></li>
+          <li class="flex items-center gap-3"><span class="w-9 h-9 grid place-items-center rounded-lg bg-accent/10 text-accent">🐙</span><a href="https://github.com/rithwickbathini" target="_blank" class="text-ink2 hover:text-accent font-medium">github.com/rithwickbathini</a></li>
+        </ul>
+      </div>
+
+      <div class="reveal from-right">
+        <div class="tilt-card bg-white rounded-2xl border border-line shadow-lift p-7">
+          <div class="tilt-inner space-y-4">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-soft mb-1.5">Name</label>
+                <input id="fn" type="text" placeholder="Your Name" class="w-full rounded-xl border border-line bg-bg px-4 py-3 text-sm text-ink focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition"/>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-soft mb-1.5">Email</label>
+                <input id="fe" type="email" placeholder="you@email.com" class="w-full rounded-xl border border-line bg-bg px-4 py-3 text-sm text-ink focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition"/>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-soft mb-1.5">Subject</label>
+              <input id="fs" type="text" placeholder="Job opportunity / Project inquiry" class="w-full rounded-xl border border-line bg-bg px-4 py-3 text-sm text-ink focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition"/>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-soft mb-1.5">Message</label>
+              <textarea id="fm" rows="5" placeholder="Tell me about the opportunity..." class="w-full rounded-xl border border-line bg-bg px-4 py-3 text-sm text-ink focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition resize-none"></textarea>
+            </div>
+            <button onclick="sendMsg()" class="btn3d btn-primary w-full">Send Message →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-line bg-white/60 backdrop-blur">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-soft">
+    <span>© 2026 <strong class="text-ink">Rithwick Bathini</strong> · Hyderabad, India</span>
+    <span>Crafted with care · <a href="#hero" class="text-accent font-medium hover:text-accent2 transition">↑ Back to top</a></span>
+  </div>
+</footer>
+
+<div id="toast" class="toast">
+  <div class="font-semibold text-ink">✓ Message sent</div>
+  <div class="text-xs text-soft mt-0.5">Thanks — I'll get back to you soon.</div>
+</div>
+
+<script>
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouch = matchMedia('(hover: none)').matches;
+
+/* MOBILE NAV */
+const navHam = document.getElementById('navHam');
+const drawer = document.getElementById('navDrawer');
+navHam.addEventListener('click', () => drawer.classList.toggle('open'));
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+
+/* SCROLL PROGRESS + NAV STATE */
+const prog = document.getElementById('sprogress');
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  prog.style.width = ((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100) + '%';
+  nav.classList.toggle('shadow-soft', window.scrollY > 40);
+}, { passive: true });
+
+/* TYPEWRITER */
+const titles = ['Software Engineer','AI Developer','Data Analyst','Python Engineer'];
+let ti=0, ci=0, del=false;
+const twEl = document.getElementById('tw');
+(function type(){
+  const t = titles[ti];
+  if(!del){ twEl.textContent = t.slice(0, ++ci); if(ci===t.length){ del=true; setTimeout(type, 2400); return; } }
+  else { twEl.textContent = t.slice(0, --ci); if(ci===0){ del=false; ti=(ti+1)%titles.length; } }
+  setTimeout(type, del ? 42 : 78);
+})();
+
+/* INTERSECTION REVEAL */
+const revObs = new IntersectionObserver(entries => entries.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('visible'); revObs.unobserve(e.target); }
+}), { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+/* COUNTER */
+let counted = false;
+new IntersectionObserver(e => {
+  if(!counted && e[0].isIntersecting){
+    counted = true;
+    document.querySelectorAll('[data-target]').forEach(el => {
+      const end = +el.dataset.target, suf = el.dataset.suffix || '', dur = 1800, t0 = performance.now();
+      (function step(t){
+        const p = Math.min((t-t0)/dur, 1), ease = 1 - Math.pow(1-p, 4);
+        el.textContent = Math.round(ease*end) + (p===1 ? suf : '');
+        if(p<1) requestAnimationFrame(step);
+      })(t0);
+    });
+  }
+}, { threshold: 0.4 }).observe(document.querySelector('#hero'));
+
+/* 3D TILT (desktop only) */
+if(!isTouch && !reduced){
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    let raf;
+    card.addEventListener('mousemove', e => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        const rx = ((e.clientY - r.top)/r.height - .5) * -8;
+        const ry = ((e.clientX - r.left)/r.width - .5) *  10;
+        card.style.transform = `perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+        card.style.boxShadow = '0 14px 28px -8px rgba(15,23,42,.14), 0 32px 64px -16px rgba(99,102,241,.28)';
+      });
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.boxShadow = '';
+    });
+  });
+}
+
+/* PARALLAX (about image + soft layers) */
+if(!reduced){
+  const parallaxEls = document.querySelectorAll('.parallax, .blob');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    document.querySelectorAll('.parallax').forEach(el => {
+      const r = el.getBoundingClientRect();
+      const c = (r.top + r.bottom)/2 - window.innerHeight/2;
+      el.style.transform = `translateY(${c * -0.06}px) scale(1.08)`;
+    });
+    document.querySelectorAll('.blob').forEach((b, i) => {
+      b.style.transform = `translateY(${y * (i%2 ? -0.08 : 0.05)}px)`;
+    });
+  }, { passive: true });
+}
+
+/* CONTACT FORM */
+function sendMsg(){
+  const n=document.getElementById('fn').value.trim(),
+        e=document.getElementById('fe').value.trim(),
+        s=document.getElementById('fs').value.trim(),
+        m=document.getElementById('fm').value.trim();
+  if(!n||!e||!s||!m){ alert('Please fill in all fields.'); return; }
+  if(!/\S+@\S+\.\S+/.test(e)){ alert('Please enter a valid email.'); return; }
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+  ['fn','fe','fs','fm'].forEach(id => document.getElementById(id).value = '');
+}
+</script>
+</body>
+</html>
